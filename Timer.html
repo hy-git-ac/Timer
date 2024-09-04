@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カウントタイマー</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        #timer {
+            font-size: 96px; /* フォントサイズを大きく */
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-size: 20px;
+            padding: 10px;
+            margin: 10px;
+        }
+
+        input {
+            font-size: 20px;
+            padding: 5px;
+            width: 100px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="timer">0.00秒</div>
+    <button id="startBtn">スタート</button>
+    <button id="pauseBtn">一時停止</button>
+
+    <div>
+        <label for="maxTime">上限秒数: </label>
+        <input type="number" id="maxTime" value="10" min="1" step="1"> 秒
+    </div>
+    <div>
+        <label for="intervalTime">インターバル: </label>
+        <input type="number" id="intervalTime" value="3" min="1" step="1"> 秒
+    </div>
+
+    <audio id="beepSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio> <!-- 通常の1秒ごとのサウンド -->
+    <audio id="startEndSound" src="https://www.soundjay.com/misc/sounds/censor-beep-4.mp3"></audio> <!-- 開始時と終了時のサウンド -->
+    <audio id="countdownBeepSound" src="https://www.soundjay.com/buttons/sounds/beep-06.mp3"></audio> <!-- カウントダウン3秒、2秒、1秒、0秒前のサウンド -->
+
+    <script>
+        let timerDisplay = document.getElementById('timer');
+        let startBtn = document.getElementById('startBtn');
+        let pauseBtn = document.getElementById('pauseBtn');
+        let maxTimeInput = document.getElementById('maxTime');
+        let intervalTimeInput = document.getElementById('intervalTime');
+        let beepSound = document.getElementById('beepSound');
+        let startEndSound = document.getElementById('startEndSound');
+        let countdownBeepSound = document.getElementById('countdownBeepSound');
+
+        let timer = 0;
+        let interval;
+        let isRunning = false;
+        let maxTime = parseFloat(maxTimeInput.value);
+        let intervalTime = parseFloat(intervalTimeInput.value);
+        let isInterval = false;
+
+        function playBeep() {
+            beepSound.currentTime = 0;
+            beepSound.play();
+        }
+
+        function playStartEndSound() {
+            startEndSound.currentTime = 0;
+            startEndSound.play();
+        }
+
+        function playCountdownBeep() {
+            countdownBeepSound.currentTime = 0;
+            countdownBeepSound.play();
+        }
+
+        function updateTimerDisplay() {
+            timerDisplay.textContent = timer.toFixed(2) + "秒";
+        }
+
+        function startTimer() {
+            if (isRunning) return;
+
+            maxTime = parseFloat(maxTimeInput.value);
+            intervalTime = parseFloat(intervalTimeInput.value);
+
+            isRunning = true;
+            let secondsCounter = 0;
+
+            playStartEndSound(); // カウント開始時にサウンドを再生
+
+            interval = setInterval(() => {
+                if (!isInterval) {
+                    timer += 0.01;
+                    if (Math.floor(timer) > secondsCounter) {
+                        secondsCounter++;
+                        playBeep();
+                    }
+                    if (timer >= maxTime) {
+                        clearInterval(interval);
+                        isRunning = false;
+                        isInterval = true;
+                        playStartEndSound(); // カウント終了時にサウンドを再生
+                        setTimeout(() => { // 2秒の間を空けてインターバル開始
+                            secondsCounter = intervalTime;
+                            startIntervalCountdown(intervalTime);
+                        }, 2000);
+                    }
+                }
+                updateTimerDisplay();
+            }, 10);
+        }
+
+        function startIntervalCountdown(time) {
+            timer = time;
+            let secondsCounter = time;
+
+            interval = setInterval(() => {
+                timer -= 0.01;
+                if (Math.floor(timer) < secondsCounter) {
+                    secondsCounter--;
+                    if (secondsCounter === 3 || secondsCounter === 2 || secondsCounter === 1 || secondsCounter === 0) {
+                        playCountdownBeep(); // 3秒、2秒、1秒、0秒前のサウンド
+                    } else {
+                        playBeep(); // 通常のサウンド
+                    }
+                }
+                if (timer <= 0) {
+                    clearInterval(interval);
+                    isInterval = false;
+                    timer = 0;
+                    setTimeout(() => {
+                        isRunning = false;
+                        startTimer(); // 0.5秒の休止後に0から自動再スタート
+                    }, 500); // 0.5秒の休止時間を設定
+                }
+                updateTimerDisplay();
+            }, 10);
+        }
+
+        function pauseTimer() {
+            clearInterval(interval);
+            isRunning = false;
+        }
+
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+    </script>
+
+</body>
+</html>
