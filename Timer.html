@@ -49,9 +49,12 @@
         <input type="number" id="intervalTime" value="3" min="1" step="1"> 秒
     </div>
 
-    <audio id="beepSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio> <!-- 通常の1秒ごとのサウンド -->
-    <audio id="startEndSound" src="https://www.soundjay.com/misc/sounds/censor-beep-4.mp3"></audio> <!-- 開始時と終了時のサウンド -->
-    <audio id="countdownBeepSound" src="https://www.soundjay.com/buttons/sounds/beep-06.mp3"></audio> <!-- カウントダウン3秒、2秒、1秒、0秒前のサウンド -->
+
+<!--
+    <audio id="beepSound" src="sounds/button-16.mp3"></audio>  通常の1秒ごとのサウンド
+    <audio id="startEndSound" src="sounds/censor-beep-4.mp3"></audio>  開始時と終了時のサウンド
+    <audio id="countdownBeepSound" src="sounds/beep-06.mp3"></audio>  カウントダウン3秒、2秒、1秒、0秒前のサウンド
+-->
 
     <script>
         let timerDisplay = document.getElementById('timer');
@@ -59,17 +62,18 @@
         let pauseBtn = document.getElementById('pauseBtn');
         let maxTimeInput = document.getElementById('maxTime');
         let intervalTimeInput = document.getElementById('intervalTime');
+/*
         let beepSound = document.getElementById('beepSound');
         let startEndSound = document.getElementById('startEndSound');
         let countdownBeepSound = document.getElementById('countdownBeepSound');
-
+*/
         let timer = 0;
         let interval;
         let isRunning = false;
         let maxTime = parseFloat(maxTimeInput.value);
         let intervalTime = parseFloat(intervalTimeInput.value);
         let isInterval = false;
-
+/*
         function playBeep() {
             beepSound.currentTime = 0;
             beepSound.play();
@@ -84,7 +88,7 @@
             countdownBeepSound.currentTime = 0;
             countdownBeepSound.play();
         }
-
+*/
         function updateTimerDisplay() {
             timerDisplay.textContent = timer.toFixed(2) + "秒";
         }
@@ -98,7 +102,7 @@
             isRunning = true;
             let secondsCounter = 0;
 
-            playStartEndSound(); // カウント開始時にサウンドを再生
+            //playStartEndSound(); // カウント開始時にサウンドを再生
 
             interval = setInterval(() => {
                 if (!isInterval) {
@@ -111,7 +115,7 @@
                         clearInterval(interval);
                         isRunning = false;
                         isInterval = true;
-                        playStartEndSound(); // カウント終了時にサウンドを再生
+                        //playStartEndSound(); // カウント終了時にサウンドを再生
                         setTimeout(() => { // 2秒の間を空けてインターバル開始
                             secondsCounter = intervalTime;
                             startIntervalCountdown(intervalTime);
@@ -131,9 +135,9 @@
                 if (Math.floor(timer) < secondsCounter) {
                     secondsCounter--;
                     if (secondsCounter === 3 || secondsCounter === 2 || secondsCounter === 1 || secondsCounter === 0) {
-                        playCountdownBeep(); // 3秒、2秒、1秒、0秒前のサウンド
+                        //playCountdownBeep(); // 3秒、2秒、1秒、0秒前のサウンド
                     } else {
-                        playBeep(); // 通常のサウンド
+                        //playBeep(); // 通常のサウンド
                     }
                 }
                 if (timer <= 0) {
