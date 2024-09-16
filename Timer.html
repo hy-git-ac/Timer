@@ -50,11 +50,11 @@
     </div>
 
 
-<!--
-    <audio id="beepSound" src="sounds/button-16.mp3"></audio>  通常の1秒ごとのサウンド
-    <audio id="startEndSound" src="sounds/censor-beep-4.mp3"></audio>  開始時と終了時のサウンド
-    <audio id="countdownBeepSound" src="sounds/beep-06.mp3"></audio>  カウントダウン3秒、2秒、1秒、0秒前のサウンド
--->
+
+    <audio id="beepSound" src="sounds/count.mp3"></audio>  通常の1秒ごとのサウンド
+    <audio id="startEndSound" src="sounds/alarm.mp3"></audio>  開始時と終了時のサウンド
+    <audio id="countdownBeepSound" src="sounds/countdown.mp3"></audio>  カウントダウン3秒、2秒、1秒、0秒前のサウンド
+
 
     <script>
         let timerDisplay = document.getElementById('timer');
@@ -62,18 +62,18 @@
         let pauseBtn = document.getElementById('pauseBtn');
         let maxTimeInput = document.getElementById('maxTime');
         let intervalTimeInput = document.getElementById('intervalTime');
-/*
+
         let beepSound = document.getElementById('beepSound');
         let startEndSound = document.getElementById('startEndSound');
         let countdownBeepSound = document.getElementById('countdownBeepSound');
-*/
+
         let timer = 0;
         let interval;
         let isRunning = false;
         let maxTime = parseFloat(maxTimeInput.value);
         let intervalTime = parseFloat(intervalTimeInput.value);
         let isInterval = false;
-/*
+
         function playBeep() {
             beepSound.currentTime = 0;
             beepSound.play();
@@ -88,7 +88,7 @@
             countdownBeepSound.currentTime = 0;
             countdownBeepSound.play();
         }
-*/
+
         function updateTimerDisplay() {
             timerDisplay.textContent = timer.toFixed(2) + "秒";
         }
